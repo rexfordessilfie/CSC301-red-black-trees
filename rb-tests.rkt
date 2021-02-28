@@ -13,7 +13,7 @@
 (define lnode (node 8 nil nil 'red nil))
 (define rnode (node 15 nil nil 'red nil))
 
-(define rnode-child-left (node 5 nil nil 'black nil))
+(define rnode-child-left (node 14 nil nil 'black nil))
 (define rnode-child-right (node 30 nil nil 'black nil))
 
 
@@ -28,16 +28,51 @@
 (set-node-parent! lnode tree2)
 (set-node-parent! rnode tree2)
 
-; It seems as the the left rotation is supposed to be done so that we are really rotating y. Instead of passing y, we must pass y's parents??
-(define my-tree (tree tree2))
-(left-rotate! my-tree tree2)
+(define my-tree2 (tree tree2))
+(define my-tree1 (tree tree1))
+(define copyof-my-tree2 my-tree2)
 
-(print)
-(print)
-(print "root: " (node-val (tree-root my-tree)))
-(print "left/right of root: " (node-val (node-left (tree-root my-tree))) (node-val (node-right (tree-root my-tree))))
-(print "left/right of left of root: " (node-val (node-left (node-left (tree-root my-tree)))) (node-val (node-right (node-left (tree-root my-tree)))))
-(print "left/right of right of root: " (node-val (node-left (node-right (tree-root my-tree)))) (node-val (node-right (node-right (tree-root my-tree)))))
+;(right-rotate! my-tree (node-right tree2))
+
+
+; Insert on an existing tree
+(define my-new-node  (node 2 nil nil 'red nil)) 
+;(rb-insert my-tree2 my-new-node)
+
+
+;Insert on an empty tree
+(define tree-empty nil)
+(define my-tree-empty (tree tree-empty))
+
+(define copyof-my-tree-empty my-tree-empty)
+
+(rb-insert! my-tree-empty my-new-node)
+(rb-delete! my-tree-empty my-new-node)
+
+
+
+; Insert on an existing tree with multiple nodes
+(rb-insert! my-tree2 my-new-node)
+(rb-delete! my-tree2 my-new-node)
+
+
+; NB: Check the colors on this. The colors after our operations do not seem to be correct!! But possibly because we are manually inserting them in :/
+(rb-check-equal-trees? my-tree2 copyof-my-tree2)
+
+
+; Different trees for testing
+#|
+Insert elements into a big tree and then delete them one by one
+After each deletion/insert, we check that the trees are what we expect them to be
+
+Insertion:
+
+Deletion:
+
+
+|#
+
+
 
 
 
