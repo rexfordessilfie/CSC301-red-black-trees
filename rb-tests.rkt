@@ -50,38 +50,24 @@
 
 
 ; Expected result 1
-(define expected-result1 new-node-A)
-(define expected-result1-x (tree new-node-A))
+(define expected1 new-node-A)
+(define expected1-x (tree new-node-A))
 
 ; Expected result 2
-(define expected-2 new-node-A)
+(define expected2 new-node-A)
 (define lnode1 new-node-B)
 (set-node-color! lnode1 'red)
-(set-node-parent! lnode1 expected-2)
+(set-node-parent! lnode1 expected2)
 
-(define expected-2-x (tree expected-2))
-
-
-
-; NB: Check the colors on this. The colors after our operations do not seem to be correct!! But possibly because we are manually inserting them in :/
-;(rb-check-equal-trees? my-tree2 copyof-my-tree2)
-
+(define expected2-x (tree expected2))
 
 ; TODO
 ; Reimplement while loop
 ; Write some tests to make sure everything is working as expected
 
-
-; Different trees for testing
 #|
 Insert elements into a big tree and then delete them one by one
 After each deletion/insert, we check that the trees are what we expect them to be
-
-Insertion:
-
-Deletion:
-
-
 |#
 
 
@@ -149,11 +135,11 @@ Deletion:
    "Tests of new code"
    (test-case
     "Inserting into an empty tree"
-    (rb-check-equals? test-tree1-x expected-result1-x)
+    (rb-check-equals? test-tree1-x expected1-x)
    )
   (test-case
    "Inserting into a tree with one node"
-   (rb-check-equals? test-tree2-x expected-2-x)
+   (rb-check-equals? test-tree2-x expected2-x)
    )
   ))
 
