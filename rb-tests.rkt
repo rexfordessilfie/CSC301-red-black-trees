@@ -15,9 +15,6 @@
 
 
 ; TESTS
-(define test-tree1 nil)
-(define test-tree1-x (tree test-tree1))
-
 (define new-node-A (node 26 nil nil 'black nil))
 (define new-node-B (node 17 nil nil 'black nil))
 (define new-node-C (node 41 nil nil 'black nil))
@@ -41,25 +38,45 @@
 
 
 ; Inserting into an empty tree
-(rb-insert! test-tree1-x new-node-A)
+(define test-tree1 nil)
+(define test-tree1-x (tree test-tree1))
+(rb-insert! test-tree1-x (node-copy new-node-A))
 
-(define test-tree2-x test-tree1-x)
-(rb-insert! test-tree2-x new-node-B)
+; Inserting into tree with only root
+(define test-tree2-x (tree (node-copy (tree-root test-tree1-x))))
+(rb-insert! test-tree2-x (node-copy new-node-B))
+
+; Inserting into tree with root and left node
+(define test-tree3-x (tree (node-copy (tree-root test-tree2-x))))
+(rb-insert! test-tree3-x (node-copy new-node-C))
 
 
 
 
 ; Expected result 1
-(define expected1 new-node-A)
-(define expected1-x (tree new-node-A))
+(define expected1 (node-copy new-node-A))
+(define expected1-x (tree expected1))
 
 ; Expected result 2
-(define expected2 new-node-A)
-(define lnode1 new-node-B)
+(define expected2 (node-copy expected1))
+(define lnode1 (node-copy new-node-B))
 (set-node-color! lnode1 'red)
 (set-node-parent! lnode1 expected2)
-
+(set-node-left! expected2 lnode1)
 (define expected2-x (tree expected2))
+
+
+
+
+; Expected result 2
+(define expected3 (node-copy expected2))
+(define rnode1 (node-copy new-node-C))
+(set-node-color! rnode1 'red)
+(set-node-parent! rnode1 expected3)
+(set-node-right! expected3 rnode1)
+(define expected3-x (tree expected3))
+
+
 
 ; TODO
 ; Reimplement while loop
@@ -135,13 +152,17 @@ After each deletion/insert, we check that the trees are what we expect them to b
    "Tests of new code"
    (test-case
     "Inserting into an empty tree"
-    (rb-check-equals? test-tree1-x expected1-x)
+    (check-equal? (rb-check-equals? test-tree1-x expected1-x) #t)
    )
   (test-case
    "Inserting into a tree with one node"
-   (rb-check-equals? test-tree2-x expected2-x)
+   (check-equal? (rb-check-equals? test-tree2-x expected2-x) #t)
+   )
+   (test-case
+   "Inserting into a tree with one node and left child"
+   (check-equal? (rb-check-equals? test-tree3-x expected3-x) #t)
    )
   ))
 
-(run-tests tests-starter-code) (newline)
+;(run-tests tests-starter-code) (newline)
 (run-tests tests-new-code) (newline)
