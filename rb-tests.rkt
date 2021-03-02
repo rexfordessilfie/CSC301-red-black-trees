@@ -65,10 +65,7 @@
 (set-node-left! expected2 lnode1)
 (define expected2-x (tree expected2))
 
-
-
-
-; Expected result 2
+; Expected result 3
 (define expected3 (node-copy expected2))
 (define rnode1 (node-copy new-node-C))
 (set-node-color! rnode1 'red)
@@ -76,11 +73,9 @@
 (set-node-right! expected3 rnode1)
 (define expected3-x (tree expected3))
 
-
-
 ; TODO
-; Reimplement while loop
-; Write some tests to make sure everything is working as expected
+; - [x] Reimplement while loop
+; - [ ] Write some tests to make sure everything is working as expected
 
 #|
 Insert elements into a big tree and then delete them one by one
