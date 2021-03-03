@@ -905,7 +905,7 @@
   (struct-copy node n)
     
   ))
-(define tree-copy
+(define tree-copy-old
   (lambda (n)
   (let kernel
    ( [orig n]
@@ -921,6 +921,58 @@
         [(not(nil? (node-right orig)))  (kernel (node-right orig) (node-right so-far))]
         [(not(nil? (node-left orig)))  (kernel (node-left orig) (node-left so-far))]
         [else so-far]))))
+
+
+
+(define tree-copy
+  (lambda (Tree) ; Tree is a tree
+
+  (define final nil)
+  (define Tree-image (struct-copy tree Tree))
+
+  (let kernel
+    ([old-curr (tree-root Tree-image)]
+    [new-curr (tree final)]
+    [new-parent nil]
+    [level 0])
+
+    (set! new-curr (node-copy old-curr))
+    
+    ;(print (node-val old-curr) " " (node-val new-curr))
+    (set-node-parent! new-curr (node-copy (node-parent new-parent)))
+
+    (if (equal? level 0) ; set external final to first new node
+        (set! final new-curr)
+        (void))
+
+    (cond
+      [(and (nil? (node-right old-curr)) (nil? (node-left old-curr))) 
+        ; do nothing
+      ]
+      [(nil? (node-left old-curr))
+        (set-node-left! new-curr nil)
+        (set-node-right! new-curr (node-right old-curr))
+        (kernel (node-right new-curr) (node-right old-curr) new-curr (+ level 1))
+      ]
+      [(nil? (node-right old-curr))
+        (set-node-right! new-curr nil)
+        (set-node-left! new-curr (node-left old-curr))
+        (kernel (node-left new-curr) (node-left old-curr) new-curr (+ level 1))
+      ]
+      [else
+
+        (set-node-left! new-curr (node-left old-curr))
+        (set-node-right! new-curr (node-right old-curr))
+
+        (kernel (node-left new-curr) (node-left old-curr) new-curr (+ level 1))
+        (kernel (node-right new-curr) (node-right old-curr) new-curr (+ level 1))
+      ]
+    )
+  )
+
+  (define final-tree (tree final))
+  final-tree
+))
    
 
 ; +---------------------+---------------------------------------------
