@@ -43,20 +43,27 @@
 (rb-insert! test-tree1-x (node-copy new-node-A))
 
 ; Inserting into tree with only root
-(define test-tree2-x (tree (node-copy (tree-root test-tree1-x))))
+(define test-tree2-x (tree-copy test-tree1-x))
+;(print "^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+;(print-tree test-tree2-x)
+;(print "^^^^^^COPIED TREE 2^^^^^^^^^^")
 (rb-insert! test-tree2-x (node-copy new-node-B))
+;(print-tree test-tree2-x)
+;(print "^^^^^^AFTER INSERT TREE 2^^^^^^^^^^")
+
 
 ; Inserting into tree with root and left node
-(define test-tree3-x (tree (node-copy (tree-root test-tree2-x))))
+(define test-tree3-x (tree-copy test-tree2-x))
+;(print "^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+;(print-tree test-tree3-x)
+;(print "^^^^^^COPIED TREE 3^^^^^^^^^^")
 (rb-insert! test-tree3-x (node-copy new-node-C))
+;(print-tree test-tree3-x)
+;(print "^^^^^^AFTER INSERT TREE 3^^^^^^^^^^")
 
 ; Tree 4
-(define test-tree4-x (tree (node-copy (tree-root test-tree3-x))))
+(define test-tree4-x (tree-copy test-tree3-x))
 (rb-insert! test-tree4-x (node-copy new-node-D))
-
-; CASE _
-;(define test-tree5-x (tree (node-copy (tree-root test-tree4-x))))
-;(rb-insert! test-tree5-x (node-copy new-node-E))
 
 
 
@@ -187,21 +194,24 @@ After each deletion/insert, we check that the trees are what we expect them to b
 (rb-insert! baby-tree (node-copy new-node-B)) ; 17
 (rb-insert! baby-tree (node-copy new-node-C)) ; 41
 (rb-insert! baby-tree (node-copy new-node-D)) ; 14
-(rb-insert! baby-tree (node-copy new-node-E)) ; 21
-(rb-insert! baby-tree (node-copy new-node-F)) ; 30
-(rb-insert! baby-tree (node-copy new-node-G)) ; 47
-(rb-insert! baby-tree (node-copy new-node-H)) ; 10
-(rb-insert! baby-tree (node-copy new-node-I)) ; 16
-(rb-insert! baby-tree (node-copy new-node-J)) ; 19
-(rb-insert! baby-tree (node-copy new-node-K)) ; 23
-(rb-insert! baby-tree (node-copy new-node-L)) ; 28
+;(rb-insert! baby-tree (node-copy new-node-E)) ; 21
+;(rb-insert! baby-tree (node-copy new-node-F)) ; 30
+;(rb-insert! baby-tree (node-copy new-node-G)) ; 47
+;(rb-insert! baby-tree (node-copy new-node-H)) ; 10
+;(rb-insert! baby-tree (node-copy new-node-I)) ; 16
+;(rb-insert! baby-tree (node-copy new-node-J)) ; 19
+;(rb-insert! baby-tree (node-copy new-node-K)) ; 23
+;(rb-insert! baby-tree (node-copy new-node-L)) ; 28
+
+
+(define boo-tree (tree-copy baby-tree))
+(rb-check-equals? boo-tree baby-tree)
 |#
-
-
-
 ; A, B, H, N
 
 
 
 
 
+; new strategy. Define the tree before insert. Insert the node?
+; define the tree after insert nd check that they are equal?
