@@ -281,19 +281,16 @@
     
     (let kernel ()
 
-    (if (red-node? (node-parent z))
-        (begin
-          (print "Entering while")
-           (cond
-
-             [(equal? (node-parent z) (node-left (node-parent (node-parent z))))
-              (print "z's parent is on the left side")
-
+    (if (red-node? (node-parent z)) ; WHILE
+      (begin
+        ;(print "Entering while")
+          (cond 
+            [(equal? (node-parent z) (node-left (node-parent (node-parent z))))
+              ;(print "z's parent is on the left side")
               (define y (node-right (node-parent (node-parent z))))
-
               (cond
                 [(red-node? y)
-                 (print "CASE 1: y is red")
+                 (print "CASE 1A: y is red")
                  (set-node-color! (node-parent z) 'black)
                  (set-node-color! y 'black)
                  (set-node-color! (node-parent (node-parent z)) 'red)
@@ -304,7 +301,7 @@
 
                  (cond
                    [(equal? z (node-right (node-parent z)))
-                    (print "CASE 2: z is on the right side of it's parent")
+                    (print "CASE 2A: z is on the right side of it's parent")
                     
                     (set! z (node-parent z))
                     (left-rotate! Tree z)
@@ -312,20 +309,20 @@
                    [else (void)]
                    )
 
-                 (print "CASE 3")
+                 (print "CASE 3A")
                  (set-node-color! (node-parent z) 'black)
                  (set-node-color! (node-parent (node-parent z) )'red)
                  (right-rotate! Tree (node-parent (node-parent z)))
 
                  ]
-                )]
-             [else
-              (print "z's parent is on the right side")
-              (define y (node-left (node-parent (node-parent z))))
+              )]
 
+             [else ; ELSE
+              ;(print "z's parent is on the right side")
+              (define y (node-left (node-parent (node-parent z))))
               (cond
                 [(red-node? y)
-                 (print "CASE 1: y is red")
+                 (print "CASE 1B: y is red")
                  (set-node-color! (node-parent z) 'black)
                  (set-node-color! y 'black)
                  (set-node-color! (node-parent (node-parent z)) 'red)
@@ -336,27 +333,29 @@
 
                  (cond
                    [(equal? z (node-left (node-parent z)))
-                    (print "CASE 2: z is on the left side of it's parent")
+                    (print "CASE 2B: z is on the left side of it's parent")
                     (set! z (node-parent z))
                     (left-rotate! Tree z)
                     ]
                    [else (void)]
                    )
-                 (print "CASE 3")
+                 (print "CASE 3B")
                  (set-node-color! (node-parent z) 'black)
                  (set-node-color! (node-parent (node-parent z)) 'red)
                  (right-rotate! Tree (node-parent (node-parent z)))
                  ]
-                )]
-             )
-           (kernel)
+              )
+             ]
            )
-        (void)
-           ))
+        (kernel)
+      ) 
+        (void) ; Else do nothing
+      )
+    )
 
     ;(define T (tree-root Tree)) ; Gets the node at the tree's root
-    (set-node-color!(tree-root Tree) 'black)
-    ))
+    (set-node-color! (tree-root Tree) 'black)
+  ))
 
 
 ;;; Procedure:
@@ -381,60 +380,60 @@
     (define y nil)
     (define x (tree-root Tree))
 
-    (print "x is: " (node-val x))
-    (print "y is: " (node-val y))
-    (print "z is: " (node-val z))
+    ;(print "x is: " (node-val x))
+    ;(print "y is: " (node-val y))
+    ;(print "z is: " (node-val z))
 
 
     
     (let kernel ()
       (if (not (nil? x))
           (begin
-            (print "INSIDE LET")
-            (print "before --> y is: " (node-val y))
+            ;(print "INSIDE LET")
+            ;(print "before --> y is: " (node-val y))
             (set! y x)
-            (print "after --> y is: " (node-val y))
+            ;(print "after --> y is: " (node-val y))
 
-            (print "x right is: " (node-val (node-right x)))
-            (print "x left is: "  (node-val (node-left x)))
-            (print "before --> x is: " (node-val x))
+            ;(print "x right is: " (node-val (node-right x)))
+            ;(print "x left is: "  (node-val (node-left x)))
+            ;(print "before --> x is: " (node-val x))
             (if (< (node-val z) (node-val x))
                 (set! x (node-left x))
                 (set! x (node-right x))
                 )
-            (print "after --> x is: " (node-val x))
+            ;(print "after --> x is: " (node-val x))
 
             (kernel)
             )
           (void))
       )
  
-    (print)
-    (print "before --> parent of z is: " (node-val (node-parent z)))
+    ;(print)
+    ;(print "before --> parent of z is: " (node-val (node-parent z)))
     (set-node-parent! z y)
-    (print "after --> parent of z is: " (node-val (node-parent z)))
+    ;(print "after --> parent of z is: " (node-val (node-parent z)))
 
     (cond
       [(nil? y)
-       (print "Entering Cond 1")
-       (print "before --> T is: " (node-val (tree-root Tree)))
+       ;(print "Entering Cond 1")
+       ;(print "before --> T is: " (node-val (tree-root Tree)))
        (set-tree-root! Tree z)
-       (print "after --> T is: " (node-val (tree-root Tree)))
+       ;(print "after --> T is: " (node-val (tree-root Tree)))
        ]
 
       [(< (node-val z) (node-val y))
-       (print "Entering Cond 2")
+       ;(print "Entering Cond 2")
        
-       (print "before --> left of y is: " (node-val (node-left y)))
+       ;(print "before --> left of y is: " (node-val (node-left y)))
        (set-node-left! y z)
-       (print "after --> left of y is: " (node-val (node-left y)))
+       ;(print "after --> left of y is: " (node-val (node-left y)))
        ]
 
       [else
-       (print "Entering Cond 3")
-       (print "before --> right of y is: " (node-val (node-right y)))
+       ;(print "Entering Cond 3")
+       ;(print "before --> right of y is: " (node-val (node-right y)))
        (set-node-right! y z)
-       (print "before --> right of y is: " (node-val (node-right y)))
+       ;(print "before --> right of y is: " (node-val (node-right y)))
        ]
       )
 
@@ -447,10 +446,8 @@
     
     (rb-insert-fixup! Tree z)
     (print "END RB-INSERT")
-    (print "RESULT: ")
-    (print-tree Tree)
-    (print)
-    (print)
+    ;(print "RESULT: ")
+    ;(print-tree Tree)
     (print)
     ))
 
@@ -731,18 +728,15 @@
     ;(print)
     
 
-    (cond
-      [(not (nil? (node-right y)))
-
-       ;(print "Entering Cond Initial")
-
-       ;(print "before --> parent of left of y is: " (node-val (node-parent (node-left y))))
-       (set-node-parent! (node-left y) x)
-       ;(print "after --> parent of left of y is: " (node-val (node-parent (node-left y))))
-       ;(print)
-       ]
-
-      [else (void)]
+    (if (not (nil? (node-right y)))
+        (begin 
+          ;(print "Entering If Initial")
+          ;(print "before --> parent of left of y is: " (node-val (node-parent (node-left y))))
+          (set-node-parent! (node-right y) x)
+          ;(print "after --> parent of left of y is: " (node-val (node-parent (node-left y))))
+          ;(print)
+        )
+        (void)
       )
        
 
@@ -769,12 +763,10 @@
        (set-node-right! (node-parent x) y)
        ;(print "after --> left of parent of T is: " (node-val (node-left (node-parent (tree-root Tree)))))
        ;(print)
-
        ]
       
       [else
        ;(print "Entering Cond 3")
-       
        ;(print "before --> right of parent of x is: " (node-val (node-right (node-parent x))))
        (set-node-left! (node-parent x) y)
        ;(print "after --> right of parent of x is: " (node-val (node-right (node-parent x))))
@@ -884,7 +876,6 @@
     (define t1 (tree-root Tree))
     (define level 0)
     (define trees-equal #t)
-    (display "\n")
      (print "------------------/-------------------")
     (let kernel ([node t1]
                  [level 0])
