@@ -3,7 +3,7 @@
 (require rackunit/text-ui)
 
 (require racket/include)
-(include "rb-starter.rkt")
+(include "nameera-starter.rkt")
 
 (define tree1 (node 1 nil nil 'black nil))
 (define lnode (node 8 nil nil 'red nil))
@@ -15,7 +15,7 @@
 
 
 ; TESTS
-(define new-node-A (node 26 nil nil 'black nil))
+(define new-node-A (node 26 nil nil 'black nil)) 
 (define new-node-B (node 17 nil nil 'black nil))
 (define new-node-C (node 41 nil nil 'black nil))
 (define new-node-D (node 14 nil nil 'black nil))
@@ -43,12 +43,27 @@
 (rb-insert! test-tree1-x (node-copy new-node-A))
 
 ; Inserting into tree with only root
-(define test-tree2-x (tree (node-copy (tree-root test-tree1-x))))
+(define test-tree2-x (tree-copy test-tree1-x))
+;(print "^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+;(print-tree test-tree2-x)
+;(print "^^^^^^COPIED TREE 2^^^^^^^^^^")
 (rb-insert! test-tree2-x (node-copy new-node-B))
+;(print-tree test-tree2-x)
+;(print "^^^^^^AFTER INSERT TREE 2^^^^^^^^^^")
+
 
 ; Inserting into tree with root and left node
-(define test-tree3-x (tree (node-copy (tree-root test-tree2-x))))
+(define test-tree3-x (tree-copy test-tree2-x))
+;(print "^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+;(print-tree test-tree3-x)
+;(print "^^^^^^COPIED TREE 3^^^^^^^^^^")
 (rb-insert! test-tree3-x (node-copy new-node-C))
+;(print-tree test-tree3-x)
+;(print "^^^^^^AFTER INSERT TREE 3^^^^^^^^^^")
+
+; Tree 4
+(define test-tree4-x (tree-copy test-tree3-x))
+(rb-insert! test-tree4-x (node-copy new-node-D))
 
 
 
@@ -73,9 +88,15 @@
 (set-node-right! expected3 rnode1)
 (define expected3-x (tree expected3))
 
-; TODO
-; - [x] Reimplement while loop
-; - [ ] Write some tests to make sure everything is working as expected
+
+; Expected result 4
+(define expected4 (node-copy expected3))
+(define lnode1-left (node-copy new-node-D))
+(set-node-color! lnode1-left 'red)
+(set-node-parent! lnode1-left (node-left expected4))
+(set-node-left! (node-left expected4) lnode1-left)
+(define expected4-x (tree expected4))
+
 
 #|
 Insert elements into a big tree and then delete them one by one
@@ -157,7 +178,40 @@ After each deletion/insert, we check that the trees are what we expect them to b
    "Inserting into a tree with one node and left child"
    (check-equal? (rb-check-equals? test-tree3-x expected3-x) #t)
    )
+   (test-case
+   "Inserting into tree 4"
+   (check-equal? (rb-check-equals? test-tree4-x expected4-x) #t)
+   )
   ))
 
 ;(run-tests tests-starter-code) (newline)
-(run-tests tests-new-code) (newline)
+;(run-tests tests-new-code) (newline)
+
+#|
+(define baby nil)
+(define baby-tree (tree baby))
+(rb-insert! baby-tree (node-copy new-node-A)) ; 26
+(rb-insert! baby-tree (node-copy new-node-B)) ; 17
+(rb-insert! baby-tree (node-copy new-node-C)) ; 41
+(rb-insert! baby-tree (node-copy new-node-D)) ; 14
+;(rb-insert! baby-tree (node-copy new-node-E)) ; 21
+;(rb-insert! baby-tree (node-copy new-node-F)) ; 30
+;(rb-insert! baby-tree (node-copy new-node-G)) ; 47
+;(rb-insert! baby-tree (node-copy new-node-H)) ; 10
+;(rb-insert! baby-tree (node-copy new-node-I)) ; 16
+;(rb-insert! baby-tree (node-copy new-node-J)) ; 19
+;(rb-insert! baby-tree (node-copy new-node-K)) ; 23
+;(rb-insert! baby-tree (node-copy new-node-L)) ; 28
+
+
+(define boo-tree (tree-copy baby-tree))
+(rb-check-equals? boo-tree baby-tree)
+|#
+; A, B, H, N
+
+
+
+
+
+; new strategy. Define the tree before insert. Insert the node?
+; define the tree after insert nd check that they are equal?
