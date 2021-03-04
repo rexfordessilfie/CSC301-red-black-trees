@@ -886,6 +886,7 @@
       (print-one " |") 
       (print-one " Node: " (node-val node))
       (print-one " Color: " (node-color node))
+      (print-one " Parent: " (node-val (node-parent node)))
       (display "\n")    
     
       (cond

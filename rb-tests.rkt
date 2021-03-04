@@ -163,11 +163,27 @@ After each deletion/insert, we check that the trees are what we expect them to b
 
 ; These tests should pass after writing your new code
 
-
-
 (define baby nil)
 (define baby-tree (tree baby))
-(rb-insert! baby-tree (node-copy new-node-A)) ; 266
+(rb-insert! baby-tree (node-copy new-node-A))
+(rb-insert! baby-tree (node-copy new-node-A))
+(rb-insert! baby-tree (node-copy new-node-B))
+(rb-insert! baby-tree (node-copy new-node-C))
+(rb-insert! baby-tree (node-copy new-node-D)) ; 14
+(rb-insert! baby-tree (node-copy new-node-E))
+ 
+(rb-insert! baby-tree (node-copy new-node-F)) ; 30
+(rb-insert! baby-tree (node-copy new-node-G)) ; 47
+(rb-insert! baby-tree (node-copy new-node-H)) ; 10
+(rb-insert! baby-tree (node-copy new-node-I)) ; 16
+(rb-insert! baby-tree (node-copy new-node-J)) ; 19
+(rb-insert! baby-tree (node-copy new-node-K)) ; 23
+(rb-insert! baby-tree (node-copy new-node-L)) ; 28
+
+(print "-------------------------------------------")
+
+(define baby1 (tree nil))
+(rb-insert! baby1 (node-copy new-node-A)) ; 266
 
 
 (define baby2 (tree nil))
@@ -175,10 +191,32 @@ After each deletion/insert, we check that the trees are what we expect them to b
 (rb-insert! baby2 (node-copy new-node-B))
 (rb-insert! baby2 (node-copy new-node-C))
 
-; 41
-;(rb-insert! baby-tree (node-copy new-node-D)) ; 14
-;(rb-insert! baby-tree (node-copy new-node-E)) ; 21
-;(rb-insert! baby-tree (node-copy new-node-F)) ; 30
+
+(define baby3 (tree nil))
+(rb-insert! baby3 (node-copy new-node-A))
+(rb-insert! baby3 (node-copy new-node-B))
+(rb-insert! baby3 (node-copy new-node-C))
+(rb-insert! baby3 (node-copy new-node-D))
+
+(define baby4 (tree nil))
+(rb-insert! baby4 (node-copy new-node-A))
+(rb-insert! baby4 (node-copy new-node-B))
+(rb-insert! baby4 (node-copy new-node-C))
+(rb-insert! baby4 (node-copy new-node-D))
+(rb-insert! baby4 (node-copy new-node-E))
+
+
+(define baby5 (tree nil))
+(rb-insert! baby5 (node-copy new-node-A))
+(rb-insert! baby5 (node-copy new-node-B))
+(rb-insert! baby5 (node-copy new-node-C))
+(rb-insert! baby5 (node-copy new-node-D))
+(rb-insert! baby5 (node-copy new-node-E))
+(rb-insert! baby5 (node-copy new-node-F))
+(print"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+(print-tree baby5)
+
+;
 ;(rb-insert! baby-tree (node-copy new-node-G)) ; 47
 ;(rb-insert! baby-tree (node-copy new-node-H)) ; 10
 ;(rb-insert! baby-tree (node-copy new-node-I)) ; 16
@@ -199,18 +237,39 @@ After each deletion/insert, we check that the trees are what we expect them to b
    "Tests of insert"
   (test-case
     "inserting into empty tree"
-    (check-equal? (and (equal?(node-val(tree-root baby-tree)) 266) (equal? 'black (node-color (tree-root baby-tree)))) #t) 
+    (check-equal? (and (equal?(node-val(tree-root baby1)) 266) (equal? 'black (node-color (tree-root baby1)))) #t) 
 ;    "Inserting into an empty tree"
 ;    (check-equal? (rb-check-equals? test-tree1-x expected1-x) #t)
    )
    
    (test-case
     "case 3A y is not red"
-    (check-equal? (equal?(node-val(node-left (tree-root baby2))) 14) (black-node?  (tree-root baby2)) #t)
+    (check-true (equal?(node-val (node-left (tree-root baby2))) 14) )
+    (check-true (red-node? (node-left (tree-root baby2))))
     (check-true(and (equal? (node-val (tree-root baby2)) 17) (black-node? (tree-root baby2))))
+    (check-equal? (and (equal?(node-val(node-right (tree-root baby2))) 266) (red-node? (node-right (tree-root baby2)))) #t)
 ;    "Inserting into an empty tree"
 ;    (check-equal? (rb-check-equals? test-tree1-x expected1-x) #t)
    )
+    (test-case
+    "case 1A y is red"
+    (check-true (equal? (node-val (minimum (tree-root baby3))) 1))
+    (check-true (red-node? (minimum(tree-root baby3))))
+    (check-true (black-node? (node-left (tree-root baby3))));14 has turned red, we are not violating the "no red parent and child" property
+   )
+    (test-case
+    "case 3A y is not red"
+    (check-true (equal? (node-val (minimum (tree-root baby3))) 1))
+    (check-true (red-node? (minimum(tree-root baby3))))
+    (check-true (black-node? (node-left (tree-root baby3))));14 has turned red, we are not violating the "no red parent and child" property
+   )
+   (test-case
+    "case 1B y is red and y is uncle on the left side"
+    (check-true (equal? (node-val (node-right(node-left (tree-root baby4)))) 15))
+    (check-true (red-node? (node-right(node-left (tree-root baby4))))))
+    
+
+  
 ;  (test-case
 ;   "Inserting into a tree with one node"
 ;   (check-equal? (rb-check-equals? test-tree2-x expected2-x) #t)
