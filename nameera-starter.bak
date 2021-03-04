@@ -382,7 +382,7 @@
 
     ;(print "x is: " (node-val x))
     ;(print "y is: " (node-val y))
-    (print "inserting : " (node-val z))
+    ;(print "z is: " (node-val z))
 
 
     
@@ -835,7 +835,6 @@
       (print-one "Level: " level)
       (print-one " |") 
       (print-one " NodeA: " (node-val nodeA))
-      (print-one " Parent: "(node-val(node-parent nodeA)))
       (print-one " ColorA: " (node-color nodeA))
       (print-one " |") 
       (print-one " Node B: " (node-val nodeB))
