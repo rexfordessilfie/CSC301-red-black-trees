@@ -315,27 +315,18 @@ After each deletion/insert, we check that the trees are what we expect them to b
 
   (test-case
     "case 2B & 3B: z's parent is on its right side, z is on the left side of its parent and y is not red"
-    (check-true (tree-contains? (tree-root baby7) 20))
+    (check-true (tree-contains? (tree-root baby7) 18))
     (check-true (tree-contains? (tree-root baby7) 11))
-    (check-true (black-node? (node-right (tree-root baby7))))
+    (check-true (black-node? (node-left (node-left (tree-root baby7)))))
+    (check-true (red-node? (node-parent (node-left (node-left (tree-root baby7))))))
 
     ;;;; What other tests can we do here? Might be easy if we have something to just check binary tree and rb tree properties for us
-  )
+    (check-true (equal? (node-val (node-left (node-left (node-left (tree-root baby7))))) 1))
+    (check-true (equal? (node-val (node-parent (node-left (node-left (tree-root baby7))))) 14))
 
-  
-;  (test-case
-;   "Inserting into a tree with one node"
-;   (check-equal? (rb-check-equals? test-tree2-x expected2-x) #t)
-;   )
-;   (test-case
-;   "Inserting into a tree with one node and left child"
-;   (check-equal? (rb-check-equals? test-tree3-x expected3-x) #t)
-;   )
-;   (test-case
-;   "Inserting into tree 4"
-;   (check-equal? (rb-check-equals? test-tree4-x expected4-x) #t)
-;   )
+  )
   ))
+
 
 ;(run-tests tests-starter-code) (newline)
 (run-tests tests-new-code) (newline)
