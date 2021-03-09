@@ -213,11 +213,36 @@ After each deletion/insert, we check that the trees are what we expect them to b
 (rb-insert! baby5 (node-copy new-node-D))
 (rb-insert! baby5 (node-copy new-node-E))
 (rb-insert! baby5 (node-copy new-node-F))
-(print"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-(print-tree baby5)
 
+
+(define baby6 (tree nil))
+(rb-insert! baby6 (node-copy new-node-A))
+(rb-insert! baby6 (node-copy new-node-B))
+(rb-insert! baby6 (node-copy new-node-C))
+(rb-insert! baby6 (node-copy new-node-D))
+(rb-insert! baby6 (node-copy new-node-E))
+(rb-insert! baby6 (node-copy new-node-F))
+(rb-insert! baby6 (node-copy new-node-G))
+(rb-insert! baby6 (node-copy new-node-H))
+
+
+
+(define baby7 (tree nil))
+(rb-insert! baby7 (node-copy new-node-A))
+(rb-insert! baby7 (node-copy new-node-B))
+(rb-insert! baby7 (node-copy new-node-C))
+(rb-insert! baby7 (node-copy new-node-D))
+(rb-insert! baby7 (node-copy new-node-E))
+(rb-insert! baby7 (node-copy new-node-F))
+(rb-insert! baby7 (node-copy new-node-G))
+(rb-insert! baby7 (node-copy new-node-H))
+(rb-insert! baby7 (node-copy new-node-I))
+(rb-insert! baby7 (node-copy new-node-J))
+
+(print"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+(print-tree baby7)
 ;
-;(rb-insert! baby-tree (node-copy new-node-G)) ; 47
+;(rb-insert! baby-tree (node-copy new-node-G))` ; 47
 ;(rb-insert! baby-tree (node-copy new-node-H)) ; 10
 ;(rb-insert! baby-tree (node-copy new-node-I)) ; 16
 ;(rb-insert! baby-tree (node-copy new-node-J)) ; 19
@@ -267,7 +292,35 @@ After each deletion/insert, we check that the trees are what we expect them to b
     "case 1B y is red and y is uncle on the left side"
     (check-true (equal? (node-val (node-right(node-left (tree-root baby4)))) 15))
     (check-true (red-node? (node-right(node-left (tree-root baby4))))))
+  
+  (test-case
+    "case 2A z is on the right side of it's parent"
+    (check-true (equal? (node-val (node-right (node-right (node-left (tree-root baby5))))) 16))
+    (check-true (red-node? (node-right (node-right (node-left (tree-root baby5))))))
+  )
+
+
+  (test-case
+    "case 3B: y is not red and z is on the right side of its parent"
+    (check-true (tree-contains? (tree-root baby6) 20))
+    (check-true (black-node? (node-right (tree-root baby6))))
+    (check-true (equal? (node-val (node-right (tree-root baby6))) 20))
+    (check-true (equal? (node-val (node-right (node-right (tree-root baby6)))) 266))
+    (check-true (red-node? (node-right (node-right (tree-root baby6)))))
+    (check-true (equal? (node-val (node-left (node-right (tree-root baby6)))) 18))
+    (check-true (red-node? (node-left (node-right (tree-root baby6)))))
+  )
     
+
+
+  (test-case
+    "case 2B & 3B: z's parent is on its right side, z is on the left side of its parent and y is not red"
+    (check-true (tree-contains? (tree-root baby7) 20))
+    (check-true (tree-contains? (tree-root baby7) 11))
+    (check-true (black-node? (node-right (tree-root baby7))))
+
+    ;;;; What other tests can we do here? Might be easy if we have something to just check binary tree and rb tree properties for us
+  )
 
   
 ;  (test-case
