@@ -244,9 +244,7 @@
 ;;; Postconditions:
 ;;;
 (define rb-transplant!
-  (lambda (Tree u v)
-    (define T (tree-root Tree))
-    
+  (lambda (Tree u v)    
     (cond
       [(nil? (node-parent u))
        (set-tree-root! Tree v)
@@ -351,8 +349,8 @@
                  (set-node-color! (node-parent (node-parent z)) 'red)
                  (left-rotate! Tree (node-parent (node-parent z)))
 
-                 (print "---------> Printing Tree after Case 3B")
-                 (print-tree Tree)
+                 ;(print "---------> Printing Tree after Case 3B")
+                 ;(print-tree Tree)
                  ]
               )
              ]
@@ -385,14 +383,14 @@
 (define rb-insert!
   (lambda (Tree z)
 
-    (print "BEGIN RB-INSERT")
+    ;(print "BEGIN RB-INSERT")
 
     (define y nil)
     (define x (tree-root Tree))
 
     ;(print "x is: " (node-val x))
     ;(print "y is: " (node-val y))
-    (print "inserting : " (node-val z))
+    ;(prin "inserting : " (node-val z))
 
 
     
@@ -418,7 +416,7 @@
           (void))
       )
  
-    ;(print)
+    ;;(print)
     ;(print "before --> parent of z is: " (node-val (node-parent z)))
     (set-node-parent! z y)
     ;(print "after --> parent of z is: " (node-val (node-parent z)))
@@ -454,14 +452,14 @@
 
     (set-node-color! z 'red)
     
-     (print "---------> Printing Tree Before Fixup")
-     (print-tree Tree)
+    ;(print "---------> Printing Tree Before Fixup")
+    ;(print-tree Tree)
 
     (rb-insert-fixup! Tree z)
-    (print "END RB-INSERT")
+    ;(print "END RB-INSERT")
     ;(print "RESULT: ")
     ;(print-tree Tree)
-    (print)
+    ;(print)
     ))
 
 
@@ -483,33 +481,42 @@
   (lambda (Tree x)
     ;(print "INSIDE DELETE_FIXUP")
     (let kernel ()
+
+      (print "x is: " (node-val x))
+      (print "x's color is: " (node-color x))
+
        
-    (if (and (not (nil? x)) (black-node? x))
+      (if (and (not (nil? x)) (black-node? x))
         (begin
-         
+           (print "I entered the if!!!")
            (cond
              [(equal? x (node-left (node-parent x)))
               (define w (node-right (node-parent x)))
+              (print "x is on the left side of it's parent")
 
               (cond
                 [(red-node? w)
+                 (print "CASE 1A: w (x's sibling) is red")
                  (set-node-color! w 'black)
                  (set-node-color! (node-parent x) 'red)
                  (left-rotate! Tree (node-parent x))
                  (set! w (node-right (node-parent x)))
                  ]
                 [(and (equal? (black-node? (node-left w))) (black-node? (node-right w)))
+                 (print "CASE 2A: w (x's sibling) is black and both w's children are black")
                  (set-node-color! w 'red)
                  (set! x (node-parent x))]
                 [else
                  (if (black-node? (node-right w))
                      (begin
+                     (print "CASE 3A: w is black and right of w is black and left of w is red")
                        (set-node-color! (node-left w) 'black)
                        (set-node-color! w 'red)
                        (right-rotate! Tree w)
                        (set! w (node-right (node-parent x)))
                        )
                      #f)
+                 (print "CASE 4A: x's sibling, w is black and w's right child is red")
                  (set-node-color! w (node-color (node-parent x)))
                  (set-node-color! (node-parent x) 'black)
                  (set-node-color! (node-right w) 'black)
@@ -518,39 +525,44 @@
                  ])
               ]
              [else
-
-              (define w (node-right (node-parent x)))
+              (print "x is on the right side of it's parent")
+              (define w (node-left (node-parent x)))
 
               (cond
                 [(red-node? w)
+                 (print "CASE 1B: w (x's sibling) is red")
                  (set-node-color! w 'black)
                  (set-node-color! (node-parent x) 'red)
-                 (left-rotate! Tree (node-parent x))
+                 (right-rotate! Tree (node-parent x))
                  (set! w (node-left (node-parent x)))
                  ]
                 [(and (equal? (black-node? (node-right w))) (black-node? (node-left w)))
+                 (print "CASE 2B: w (x's sibling) is black and both w's children are black")
                  (set-node-color! w 'red)
                  (set! x (node-parent x))]
                 [else
                  (if (black-node? (node-left w))
                      (begin
+                       (print "CASE 3B: w is black and left of w is black and right of w is red")
                        (set-node-color! (node-right w) 'black)
                        (set-node-color! w 'red)
-                       (right-rotate! Tree w)
+                       (left-rotate! Tree w)
                        (set! w (node-left (node-parent x)))
                        )
                      #f)
+                (print "CASE 4B: x's sibling, w is black and w's right child is red")
                  (set-node-color! w (node-color (node-parent x)))
                  (set-node-color! (node-parent x) 'black)
                  (set-node-color! (node-left w) 'black)
-                 (left-rotate! Tree (node-parent x))
+                 (right-rotate! Tree (node-parent x))
                  (set! x (tree-root Tree))
                  ])
 
               ])
            (kernel)
-           ) (void))
-      )
+        ) 
+        (print "I did not enter the if statement!!"))
+    )
            
     (set-node-color! x 'black)
     ))
@@ -572,25 +584,34 @@
 ;;;
 (define rb-delete!
   (lambda (Tree z)
+    (print "DELETING " (node-val z))
 
+    ; Consider if we can use a kernel instead so that it is redifined locally with each call?
     (define y z)
     (define x nil)
 
     (define y-original-color (node-color y))
+    (print "y-original-color is: " y-original-color)
 
+    ; Recursion where we initialize y and x in that way but then we update x and y in the next recursive call?
     (cond
       [(nil? (node-left z))
+       (print "Left of z is nil")
+       (print "---->Before, x is: " (node-val x))
        (set! x (node-right z))
+       (print "------>After, x is: " (node-val x))
        (rb-transplant! Tree z (node-right z))
        ]
       [(nil? (node-right z))
+      (print "Right of z is nil")
        (set! x (node-left z))
        (rb-transplant! Tree z (node-left z))
        ]
       [else
-
+       (print "Both Left and Right of z are not nil")
        (set! y (minimum (node-right z)))
        (set! y-original-color (node-color y)) ; double check if this set works
+       (print "y-original-color is: " y-original-color)
        (set! x (node-right y))
 
        (if (equal? (node-parent y) z)
@@ -606,10 +627,20 @@
        ]
       )
 
+    (print "before-if: y-original-color is: " y-original-color)
     (if (equal? y-original-color 'black)
         (rb-delete-fixup! Tree x) 
         (void))
+
+    (print "EXITING DELETE")
+    (print)
+    (print)
     ))
+  
+(define find-node ;; Should find and return a node in a binary tree
+  (lambda (Tree val)
+  0
+))
 
 
 ;;; Procedure:
@@ -634,27 +665,27 @@
     ;(define T (tree-root Tree)) ; Gets the node at the tree's root
     (define y (node-right x))
 
-    (print "T is: " (node-val (tree-root Tree))) 
-    (print "x is: " (node-val x))
-    (print "y is: " (node-val y))
-    (print)
+    ;(print "T is: " (node-val (tree-root Tree))) 
+    ;(print "x is: " (node-val x))
+    ;(print "y is: " (node-val y))
+    ;(print)
 
     
-    (print "before --> right of x is: " (node-val (node-right  x)))
+    ;(print "before --> right of x is: " (node-val (node-right  x)))
     (set-node-right! x (node-left y))
-    (print "after --> right of x is: " (node-val (node-right x)))
-    (print)
+    ;(print "after --> right of x is: " (node-val (node-right x)))
+    ;(print)
     
 
     (cond
       [(not (nil? (node-left y)))
 
-       (print "Entering Cond Initial")
+;       (print "Entering Cond Initial")
 
-       (print "before --> parent of left of y is: " (node-val (node-parent (node-left y))))
+;       (print "before --> parent of left of y is: " (node-val (node-parent (node-left y))))
        (set-node-parent! (node-left y) x)
-       (print "after --> parent of left of y is: " (node-val (node-parent (node-left y))))
-       (print)
+;       (print "after --> parent of left of y is: " (node-val (node-parent (node-left y))))
+       ;(print)
        ]
 
       [else (void)]
@@ -664,48 +695,48 @@
     (print "before --> parent of y is: " (node-val (node-parent y)))
     (set-node-parent! y (node-parent x))
     (print "after --> parent of y is: " (node-val (node-parent y)))
-    (print)
+    ;(print)
 
 
     (cond
       [(nil? (node-parent x))
-       (print "Entering Cond 1")
+      ; (print "Entering Cond 1")
        
-       (print "before --> T is: " (node-val (tree-root Tree)))
+      ; (print "before --> T is: " (node-val (tree-root Tree)))
        (set-tree-root! Tree y)
-       (print "after --> T is: " (node-val (tree-root Tree)))
-       (print)
+      ; (print "after --> T is: " (node-val (tree-root Tree)))
+       ;(print)
        ]
       
       [(equal? (node-left (node-parent x)) x)
-       (print "Entering cond 2")
+      ; (print "Entering cond 2")
        
-       (print "before --> left of parent of T is: " (node-val (node-left (node-parent (tree-root Tree)))))
+      ; (print "before --> left of parent of T is: " (node-val (node-left (node-parent (tree-root Tree)))))
        (set-node-left! (node-parent x) y)
-       (print "after --> left of parent of T is: " (node-val (node-left (node-parent (tree-root Tree)))))
-       (print)
+      ; (print "after --> left of parent of T is: " (node-val (node-left (node-parent (tree-root Tree)))))
+       ;(print)
 
        ]
       
       [else
-       (print "Entering Cond 3")
+      ; (print "Entering Cond 3")
        
-       (print "before --> right of parent of x is: " (node-val (node-right (node-parent x))))
+      ; (print "before --> right of parent of x is: " (node-val (node-right (node-parent x))))
        (set-node-right! (node-parent x) y)
-       (print "after --> right of parent of x is: " (node-val (node-right (node-parent x))))
-       (print)
+      ; (print "after --> right of parent of x is: " (node-val (node-right (node-parent x))))
+       ;(print)
        ])
 
-    (print "Out of Cond")
-    (print "before --> left of y is: " (node-val (node-left y)))
+   ; (print "Out of Cond")
+   ; (print "before --> left of y is: " (node-val (node-left y)))
     (set-node-left! y x) 
-    (print "after --> left of y is: " (node-val (node-left y)))
-    (print)
+   ; (print "after --> left of y is: " (node-val (node-left y)))
+    ;(print)
 
-    (print "before --> parent of x is: " (node-val (node-parent x)))
+   ; (print "before --> parent of x is: " (node-val (node-parent x)))
     (set-node-parent! x y)
-    (print "after --> parent of x is: " (node-val (node-parent x)))
-    (print)
+   ; (print "after --> parent of x is: " (node-val (node-parent x)))
+    ;(print)
     ))
 
 
@@ -732,13 +763,13 @@
     ;(print "T is: " (node-val (tree-root Tree))) 
     ;(print "x is: " (node-val x))
     ;(print "y is: " (node-val y))
-    ;(print)
+    ;;(print)
 
     
     ;(print "before --> right of x is: " (node-val (node-right  x)))
     (set-node-left! x (node-right y))
     ;(print "after --> right of x is: " (node-val (node-right x)))
-    ;(print)
+    ;;(print)
     
 
     (if (not (nil? (node-right y)))
@@ -747,7 +778,7 @@
           ;(print "before --> parent of left of y is: " (node-val (node-parent (node-left y))))
           (set-node-parent! (node-right y) x)
           ;(print "after --> parent of left of y is: " (node-val (node-parent (node-left y))))
-          ;(print)
+          ;;(print)
         )
         (void)
       )
@@ -756,7 +787,7 @@
     ;(print "before --> parent of y is: " (node-val (node-parent y)))
     (set-node-parent! y (node-parent x))
     ;(print "after --> parent of y is: " (node-val (node-parent y)))
-    ;(print)
+    ;;(print)
 
 
     (cond
@@ -766,7 +797,7 @@
        ;(print "before --> T is: " (node-val (tree-root Tree)))
        (set-tree-root! Tree y)
        ;(print "after --> T is: " (node-val (tree-root Tree)))
-       ;(print)
+       ;;(print)
        ]
       
       [(equal? (node-right (node-parent x)) x)
@@ -775,7 +806,7 @@
        ;(print "before --> left of parent of T is: " (node-val (node-left (node-parent (tree-root Tree)))))
        (set-node-right! (node-parent x) y)
        ;(print "after --> left of parent of T is: " (node-val (node-left (node-parent (tree-root Tree)))))
-       ;(print)
+       ;;(print)
        ]
       
       [else
@@ -783,19 +814,19 @@
        ;(print "before --> right of parent of x is: " (node-val (node-right (node-parent x))))
        (set-node-left! (node-parent x) y)
        ;(print "after --> right of parent of x is: " (node-val (node-right (node-parent x))))
-       ;(print)
+       ;;(print)
        ])
 
     ;(print "Out of Cond")
     ;(print "before --> left of y is: " (node-val (node-left y)))
     (set-node-right! y x) 
     ;(print "after --> left of y is: " (node-val (node-left y)))
-    ;(print)
+    ;;(print)
 
     ;(print "before --> parent of x is: " (node-val (node-parent x)))
     (set-node-parent! x y)
     ;(print "after --> parent of x is: " (node-val (node-parent x)))
-    ;(print)
+    ;;(print)
     ))
 
 

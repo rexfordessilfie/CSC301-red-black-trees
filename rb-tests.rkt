@@ -239,19 +239,46 @@ After each deletion/insert, we check that the trees are what we expect them to b
 (rb-insert! baby7 (node-copy new-node-I))
 (rb-insert! baby7 (node-copy new-node-J))
 
-(print"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-(print-tree baby7)
+
+
+(define full-tree (tree nil))
+(define some-node (node-copy new-node-C))
+(rb-insert! full-tree (node-copy new-node-A))
+(rb-insert! full-tree (node-copy new-node-B))
+(rb-insert! full-tree (node-copy new-node-C))
+(rb-insert! full-tree (node-copy new-node-D))
+(rb-insert! full-tree (node-copy new-node-E))
+(rb-insert! full-tree (node-copy new-node-F))
+(rb-insert! full-tree (node-copy new-node-G))
+(rb-insert! full-tree (node-copy new-node-H))
+(rb-insert! full-tree (node-copy new-node-I))
+(rb-insert! full-tree (node-copy new-node-J))
+(rb-insert! full-tree (node-copy new-node-K))
+(rb-insert! full-tree (node-copy new-node-L))
+
+(print"BEFORE:@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+(print-tree full-tree)
 ;
-;(rb-insert! baby-tree (node-copy new-node-G))` ; 47
-;(rb-insert! baby-tree (node-copy new-node-H)) ; 10
-;(rb-insert! baby-tree (node-copy new-node-I)) ; 16
-;(rb-insert! baby-tree (node-copy new-node-J)) ; 19
-;(rb-insert! baby-tree (node-copy new-node-K)) ; 23
-;(rb-insert! baby-tree (node-copy new-node-L)) ; 28
+
+(rb-delete! full-tree (node-right (tree-root full-tree)))
+
+;;; (rb-delete! full-tree new-node-B)
+;;; (rb-delete! full-tree new-node-C)
+;;; (rb-delete! full-tree new-node-D)
+;;; (rb-delete! full-tree new-node-E)
+;;; (rb-delete! full-tree new-node-F)
+;;; (rb-delete! full-tree new-node-G)
+;;; (rb-delete! full-tree new-node-H)
+;;; (rb-delete! full-tree new-node-I)
+;;; (rb-delete! full-tree new-node-J)
+;;; (rb-delete! full-tree new-node-K)
 
 
-(define boo-tree (tree-copy baby-tree))
-(rb-check-equals? boo-tree baby-tree)
+(print"AFTER:@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+(print-tree full-tree)
+
+;(define boo-tree (tree-copy baby-tree))
+;(rb-check-equals? boo-tree baby-tree)
 
 
 
@@ -325,6 +352,11 @@ After each deletion/insert, we check that the trees are what we expect them to b
     (check-true (equal? (node-val (node-parent (node-left (node-left (tree-root baby7))))) 14))
 
   )
+
+
+  ;;; DELETIONS
+
+
   ))
 
 
