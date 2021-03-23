@@ -250,7 +250,7 @@
     (cond
       [(nil? (node-parent u))
        (set-tree-root! Tree v)
-       ]
+      ]
       [(equal? u (node-left (node-parent u)))
        (set-node-left! (node-parent u) v)
        ]
@@ -259,7 +259,7 @@
        ]
       )
     (set-node-parent! v (node-parent u))
-    ))
+  ))
 
 
 ;;; Procedure:
@@ -487,41 +487,43 @@
     ;(print "INSIDE DELETE_FIXUP")
     (let kernel ()
 
-      (print "x is: " (node-val x))
-      (print "x's color is: " (node-color x))
+      ; (print "x is: " (node-val x))
+      ; (print "x's color is: " (node-color x))
 
        
-      (if (and (not (nil? x)) (black-node? x))
+      (if (and (not (equal? x (tree-root Tree))) (black-node? x)) ; Kernel recursive call condition
         (begin
-           (print "I entered the if!!!")
+           ; (print "I entered the if!!!")
            (cond
              [(equal? x (node-left (node-parent x)))
               (define w (node-right (node-parent x)))
-              (print "x is on the left side of it's parent")
+              ; (print "x is on the left side of it's parent")
 
-              (cond
-                [(red-node? w)
-                 (print "CASE 1A: w (x's sibling) is red")
+              (if (red-node? w)
+              (begin
                  (set-node-color! w 'black)
                  (set-node-color! (node-parent x) 'red)
                  (left-rotate! Tree (node-parent x))
                  (set! w (node-right (node-parent x)))
-                 ]
+              )
+              (void))
+
+              (cond
                 [(and (black-node? (node-left w)) (black-node? (node-right w)))
-                 (print "CASE 2A: w (x's sibling) is black and both w's children are black")
+                 ; (print "CASE 2A: w (x's sibling) is black and both w's children are black")
                  (set-node-color! w 'red)
                  (set! x (node-parent x))]
                 [else
                  (if (black-node? (node-right w))
                      (begin
-                     (print "CASE 3A: w is black and right of w is black and left of w is red")
+                     ; (print "CASE 3A: w is black and right of w is black and left of w is red")
                        (set-node-color! (node-left w) 'black)
                        (set-node-color! w 'red)
                        (right-rotate! Tree w)
                        (set! w (node-right (node-parent x)))
                        )
-                     #f)
-                 (print "CASE 4A: x's sibling, w is black and w's right child is red")
+                      (void))
+                 ; (print "CASE 4A: x's sibling, w is black and w's right child is red")
                  (set-node-color! w (node-color (node-parent x)))
                  (set-node-color! (node-parent x) 'black)
                  (set-node-color! (node-right w) 'black)
@@ -530,32 +532,34 @@
                  ])
               ]
              [else
-              (print "x is on the right side of it's parent")
+              ; (print "x is on the right side of it's parent")
               (define w (node-left (node-parent x)))
 
-              (cond
-                [(red-node? w)
-                 (print "CASE 1B: w (x's sibling) is red")
+              (if (red-node? w)
+              (begin
                  (set-node-color! w 'black)
                  (set-node-color! (node-parent x) 'red)
                  (right-rotate! Tree (node-parent x))
                  (set! w (node-left (node-parent x)))
-                 ]
+              )
+              (void))
+
+              (cond
                 [(and (black-node? (node-right w)) (black-node? (node-left w)))
-                 (print "CASE 2B: w (x's sibling) is black and both w's children are black")
+                 ; (print "CASE 2B: w (x's sibling) is black and both w's children are black")
                  (set-node-color! w 'red)
                  (set! x (node-parent x))]
                 [else
                  (if (black-node? (node-left w))
                      (begin
-                       (print "CASE 3B: w is black and left of w is black and right of w is red")
+                       ; (print "CASE 3B: w is black and left of w is black and right of w is red")
                        (set-node-color! (node-right w) 'black)
                        (set-node-color! w 'red)
                        (left-rotate! Tree w)
                        (set! w (node-left (node-parent x)))
                        )
                      #f)
-                (print "CASE 4B: x's sibling, w is black and w's right child is red")
+                 ; (print "CASE 4B: x's sibling, w is black and w's right child is red")
                  (set-node-color! w (node-color (node-parent x)))
                  (set-node-color! (node-parent x) 'black)
                  (set-node-color! (node-left w) 'black)
@@ -566,7 +570,7 @@
               ])
            (kernel)
         ) 
-        (print "I did not enter the if statement!!"))
+        (void))
     )
            
     (set-node-color! x 'black)
@@ -589,55 +593,57 @@
 ;;;   The properties of red-black trees are maintained
 (define rb-delete!
   (lambda (Tree z)
-    (print "DELETING " (node-val z))
+    ;(print "DELETING " (node-val z))
 
     (define y z)
     (define x nil)
 
     (define y-original-color (node-color y))
-    (print "y-original-color is: " y-original-color)
+    ;(print "y-original-color is: " y-original-color)
 
     (cond
       [(nil? (node-left z))
-       (print "Left of z is nil")
-       (print "---->Before, x is: " (node-val x))
+       ;(print "Left of z is nil")
+       ;(print "---->Before, x is: " (node-val x))
        (set! x (node-right z))
-       (print "------>After, x is: " (node-val x))
+       ;(print "------>After, x is: " (node-val x))
        (rb-transplant! Tree z (node-right z))
        ]
       [(nil? (node-right z))
-      (print "Right of z is nil")
+      ;(print "Right of z is nil")
        (set! x (node-left z))
        (rb-transplant! Tree z (node-left z))
        ]
       [else
-       (print "Both Left and Right of z are not nil")
+       ;(print "Both Left and Right of z are not nil")
        (set! y (minimum (node-right z)))
        (set! y-original-color (node-color y)) 
-       (print "y-original-color is: " y-original-color)
+       ;(print "y-original-color is: " y-original-color)
        (set! x (node-right y))
 
        (if (equal? (node-parent y) z)
            (set-node-parent! x y)
-           (rb-transplant! Tree y (node-right y))
+           (begin
+              (rb-transplant! Tree y (node-right y))
+              (set-node-right! y (node-right z))
+              (set-node-parent! (node-right y) y)
            )
+        )
 
        (rb-transplant! Tree z y)
        (set-node-left! y (node-left z))
        (set-node-parent! (node-left y) y)
-
        (set-node-color! y (node-color z))
        ]
       )
 
-    (print "before-if: y-original-color is: " y-original-color)
+    ;(print "before-if: y-original-color is: " y-original-color)
     (if (equal? y-original-color 'black)
         (rb-delete-fixup! Tree x) 
         (void))
 
-    (print "EXITING DELETE")
-    (print)
-    (print)
+    ;(print "EXITING DELETE")
+    ;(print)
     ))
   
 
@@ -688,10 +694,9 @@
       )
        
 
-    (print "before --> parent of y is: " (node-val (node-parent y)))
+    ;(print "before --> parent of y is: " (node-val (node-parent y)))
     (set-node-parent! y (node-parent x))
-    (print "after --> parent of y is: " (node-val (node-parent y)))
-    ;(print)
+    ;(print "after --> parent of y is: " (node-val (node-parent y)))
 
 
     (cond
