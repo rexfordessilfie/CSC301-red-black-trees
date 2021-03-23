@@ -37,66 +37,6 @@
 (define new-node-T (node 8 nil nil 'black nil))
 
 
-; Inserting into an empty tree
-(define test-tree1 nil)
-(define test-tree1-x (tree test-tree1))
-(rb-insert! test-tree1-x (node-copy new-node-A))
-
-; Inserting into tree with only root
-(define test-tree2-x (tree-copy test-tree1-x))
-;(print "^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-;(print-tree test-tree2-x)
-;(print "^^^^^^COPIED TREE 2^^^^^^^^^^")
-(rb-insert! test-tree2-x (node-copy new-node-B))
-;(print-tree test-tree2-x)
-;(print "^^^^^^AFTER INSERT TREE 2^^^^^^^^^^")
-
-
-; Inserting into tree with root and left node
-(define test-tree3-x (tree-copy test-tree2-x))
-;(print "^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-;(print-tree test-tree3-x)
-;(print "^^^^^^COPIED TREE 3^^^^^^^^^^")
-(rb-insert! test-tree3-x (node-copy new-node-C))
-;(print-tree test-tree3-x)
-;(print "^^^^^^AFTER INSERT TREE 3^^^^^^^^^^")
-
-; Tree 4
-(define test-tree4-x (tree-copy test-tree3-x))
-(rb-insert! test-tree4-x (node-copy new-node-D))
-
-
-
-
-; Expected result 1
-(define expected1 (node-copy new-node-A))
-(define expected1-x (tree expected1))
-
-; Expected result 2
-(define expected2 (node-copy expected1))
-(define lnode1 (node-copy new-node-B))
-(set-node-color! lnode1 'red)
-(set-node-parent! lnode1 expected2)
-(set-node-left! expected2 lnode1)
-(define expected2-x (tree expected2))
-
-; Expected result 3
-(define expected3 (node-copy expected2))
-(define rnode1 (node-copy new-node-C))
-(set-node-color! rnode1 'red)
-(set-node-parent! rnode1 expected3)
-(set-node-right! expected3 rnode1)
-(define expected3-x (tree expected3))
-
-
-; Expected result 4
-(define expected4 (node-copy expected3))
-(define lnode1-left (node-copy new-node-D))
-(set-node-color! lnode1-left 'red)
-(set-node-parent! lnode1-left (node-left expected4))
-(set-node-left! (node-left expected4) lnode1-left)
-(define expected4-x (tree expected4))
-
 
 #|
 Insert elements into a big tree and then delete them one by one
@@ -276,13 +216,6 @@ After each deletion/insert, we check that the trees are what we expect them to b
 
 (print"AFTER:@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 (print-tree full-tree)
-
-;(define boo-tree (tree-copy baby-tree))
-;(rb-check-equals? boo-tree baby-tree)
-
-
-
-; A, B, H, N
 
 (define tests-new-code
   (test-suite

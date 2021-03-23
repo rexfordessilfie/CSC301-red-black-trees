@@ -236,13 +236,15 @@
 ;;;   u, a node
 ;;;   v, a node
 ;;; Purpose:
-;;;   
+;;;   Replaces one subtree as a child of its parent with another subtree
 ;;; Produces:
-;;;   
+;;;   [None]. Causes a side-effect where the subtree rooted at node u is replaced with the subtree rooted at node v.
 ;;; Preconditions:
-;;;   
+;;;   [None]
 ;;; Postconditions:
-;;;
+;;;   The node, u is no longer present in the tree
+;;;   The parent of u, now points to v
+;;;   If u is nil, then z becomes the root of the tree
 (define rb-transplant!
   (lambda (Tree u v)    
     (cond
@@ -263,16 +265,17 @@
 ;;; Procedure:
 ;;;   rb-insert-fixup
 ;;; Parameters:
-;;;   x, a node
-;;;   val, a value
+;;;   Tree, a red-black tree
+;;;   z, a node
 ;;; Purpose:
-;;;   
+;;;   Restores the red-black properties of Tree after an insert
 ;;; Produces:
-;;;   
+;;;   [None]. Causes a side-effect on Tree, where it is modified to maintain red-black tree properties
 ;;; Preconditions:
-;;;   
+;;;   z must be a node in Tree
 ;;; Postconditions:
-;;;
+;;;   All the node values originally in tree remain in tree
+;;;   Tree maintains properties 2 and 4 of red-black trees
 (define rb-insert-fixup!
   (lambda (Tree z)
     ;(print "INSIDE INSERT_FIXUP")
@@ -369,17 +372,18 @@
 ;;; Procedure:
 ;;;   rb-insert!
 ;;; Parameters:
-;;;   x, a node
-;;;   val, a value
+;;;   Tree, a tree
+;;;   z, a node
 ;;; Purpose:
-;;;   
+;;;   Inserts the node, z into Tree, maintaining all red-black tree properties
 ;;; Produces:
-;;;   
+;;;   [None]. Causes a side effect on Tree, such that it contains the node z, and maintains red-black tree properties
 ;;; Preconditions:
-;;;   
+;;;   [No additional]
 ;;; Postconditions:
-;;;
-
+;;;   All node values originally in Tree remain in tree
+;;;   z is now a node in Tree
+;;;   Tree maintains red-black tree properties
 (define rb-insert!
   (lambda (Tree z)
 
@@ -390,7 +394,7 @@
 
     ;(print "x is: " (node-val x))
     ;(print "y is: " (node-val y))
-    ;(prin "inserting : " (node-val z))
+    ;(print "inserting : " (node-val z))
 
 
     
@@ -463,20 +467,21 @@
     ))
 
 
-; TEST THISSSSS
 ;;; Procedure:
-;;;   rb-delete!
+;;;   rb-delete-fixup!
 ;;; Parameters:
 ;;;   Tree, a tree
-;;;   z, a value
+;;;   x, a node
 ;;; Purpose:
-;;;   
+;;;   Restores the red-black tree properties of a red-black tree given the subtree x, that was transplanted
 ;;; Produces:
-;;;   
+;;;   [None]. Causes a side effect on the tree, where red-black tree properties of Tree are restored
 ;;; Preconditions:
-;;;   
+;;;   Tree must not be empty
+;;;   x must be a subtree in Tree
 ;;; Postconditions:
-;;;
+;;;   All the node values originally in tree remain in tree
+;;;   Red-black tree properties 1, 2 and 4 of Tree are restored
 (define rb-delete-fixup!
   (lambda (Tree x)
     ;(print "INSIDE DELETE_FIXUP")
@@ -568,32 +573,30 @@
     ))
 
 
-; TEST THISSSSS
 ;;; Procedure:
 ;;;   rb-delete!
 ;;; Parameters:
 ;;;   Tree, a tree
 ;;;   z, a value
 ;;; Purpose:
-;;;   
+;;;   Deletes a node from a red-black tree, keeping the tree balanced
 ;;; Produces:
-;;;   
+;;;   None. But causes a side effect on the given tree
 ;;; Preconditions:
-;;;   
+;;;   The node, z, should be a valid node in the tree
 ;;; Postconditions:
-;;;
+;;;   The node, z, no longer exists in the tree
+;;;   The properties of red-black trees are maintained
 (define rb-delete!
   (lambda (Tree z)
     (print "DELETING " (node-val z))
 
-    ; Consider if we can use a kernel instead so that it is redifined locally with each call?
     (define y z)
     (define x nil)
 
     (define y-original-color (node-color y))
     (print "y-original-color is: " y-original-color)
 
-    ; Recursion where we initialize y and x in that way but then we update x and y in the next recursive call?
     (cond
       [(nil? (node-left z))
        (print "Left of z is nil")
@@ -610,7 +613,7 @@
       [else
        (print "Both Left and Right of z are not nil")
        (set! y (minimum (node-right z)))
-       (set! y-original-color (node-color y)) ; double check if this set works
+       (set! y-original-color (node-color y)) 
        (print "y-original-color is: " y-original-color)
        (set! x (node-right y))
 
@@ -637,11 +640,6 @@
     (print)
     ))
   
-(define find-node ;; Should find and return a node in a binary tree
-  (lambda (Tree val)
-  0
-))
-
 
 ;;; Procedure:
 ;;;   left-rotate!
@@ -657,8 +655,6 @@
 ;;;   The parent of the root of Tree is nil
 ;;; Postconditions:
 ;;;   All nodes originally in the tree remain in the tree after rotation
-
-; CAN WE HAVE A TREE WITH JUST ONE ELEMENT BE ROTATED??
 (define left-rotate!
   (lambda (Tree x) 
     
@@ -830,6 +826,14 @@
     ))
 
 
+;;; Procedure:
+;;;   print
+;;; Parameters:
+;;;   label, value, value2, value3: strings
+;;; Purpose:
+;;;   Displays label, value, value2 and value3 on a single line followed by newline
+;;; Produces:
+;;;   [None]
 (define print
   (lambda ([label ""] [value ""] [value2 ""] [value3 ""])
     (display label)
@@ -841,28 +845,30 @@
     (display "\n")
     ))
 
-
+;;; Procedure:
+;;;   print-one
+;;; Parameters:
+;;;   label, value: strings
+;;; Purpose:
+;;;   Displays label and value on the same line
+;;; Produces:
+;;;   [None]
 (define print-one
-  (lambda ([label ""] [value ""] [value2 ""] [value3 ""])
+  (lambda ([label ""] [value ""])
     (display label)
     (display value)
     (display value2)
     ))
 
-(define print-list
-  (lambda (lst)
-    (let kernel ([current lst])
-
-      (if (null? (cdr current))
-          (display (car current))
-          (display (car current) (kernel (cdr current)))
-          )
-
-      )
-    (display "\n")
-    ))
-
-
+;;; Procedure:
+;;;   print-one
+;;; Parameters:
+;;;   tree1, a tree
+;;;   tree2,, a tree
+;;; Purpose:
+;;;   Checks whether two red-black trees are equal. i.e same values, and same color, printing both trees along the way
+;;; Produces:
+;;;   result, true if the trees are equal, false otherwise
 (define rb-check-equals?
   (lambda (tree1 tree2)
 
@@ -906,15 +912,20 @@
          (kernel (node-right nodeA) (node-right nodeB) (+ level 1))
          ]
         )
-      )
-
-    ;(print "Trees Equal? :" trees-equal)
-   
+      )   
     (print "------------------/-------------------")
     trees-equal
     ))
 
 
+;;; Procedure:
+;;;   print-tree
+;;; Parameters:
+;;;   Tree, a tree
+;;; Purpose:
+;;;   Prints a red-black tree
+;;; Produces:
+;;;   [None]
 (define print-tree
   (lambda (Tree)
 
@@ -924,7 +935,6 @@
      (print "------------------/-------------------")
     (let kernel ([node t1]
                  [level 0])
-      
       
       (print-one "Level: " level)
       (print-one " |") 
@@ -946,11 +956,26 @@
      (print "------------------/-------------------")
     ))
 
+;;; Procedure:
+;;;   node-copy
+;;; Parameters:
+;;;   n, a node
+;;; Purpose:
+;;;   Creates and returns a copy of node n
+;;; Produces:
+;;;   result, a copy of node n
 (define node-copy
   (lambda (n)
   (struct-copy node n)
-    
   ))
+
+   
+
+; +---------------------+---------------------------------------------
+; |    Testing          |
+; +---------------------+
+
+; Include here any code that will not be graded
 (define tree-copy-old
   (lambda (n)
   (let kernel
@@ -967,8 +992,7 @@
         [(not(nil? (node-right orig)))  (kernel (node-right orig) (node-right so-far))]
         [(not(nil? (node-left orig)))  (kernel (node-left orig) (node-left so-far))]
         [else so-far]))))
-
-
+        
 
 (define tree-copy
   (lambda (Tree) ; Tree is a tree
@@ -1019,11 +1043,16 @@
   (define final-tree (tree final))
   final-tree
 ))
-   
 
-; +---------------------+---------------------------------------------
-; |    Testing          |
-; +---------------------+
+(define print-list
+  (lambda (lst)
+    (let kernel ([current lst])
 
-; Include here any code that will not be graded
+      (if (null? (cdr current))
+          (display (car current))
+          (display (car current) (kernel (cdr current)))
+          )
 
+      )
+    (display "\n")
+    ))

@@ -1,4 +1,5 @@
 *.rkt~
+*.bak
 ProblemSet4.pdf
 *.DS_Store
 
