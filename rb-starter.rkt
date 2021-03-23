@@ -291,7 +291,7 @@
               (define y (node-right (node-parent (node-parent z))))
               (cond
                 [(red-node? y)
-                 (print "CASE 1A: y is red")
+                 ;(print "CASE 1A: y is red")
                  (set-node-color! (node-parent z) 'black)
                  (set-node-color! y 'black)
                  (set-node-color! (node-parent (node-parent z)) 'red)
@@ -302,7 +302,7 @@
 
                  (cond
                    [(equal? z (node-right (node-parent z)))
-                    (print "CASE 2A: z is on the right side of it's parent")
+                    ;(print "CASE 2A: z is on the right side of it's parent")
                     
                     (set! z (node-parent z))
                     (left-rotate! Tree z)
@@ -310,7 +310,7 @@
                    [else (void)]
                    )
 
-                 (print "CASE 3A")
+                 ;(print "CASE 3A")
                  (set-node-color! (node-parent z) 'black)
                  (set-node-color! (node-parent (node-parent z) )'red)
                  (right-rotate! Tree (node-parent (node-parent z)))
@@ -319,11 +319,11 @@
               )]
 
              [else ; ELSE
-              ;(print "z's parent is on the right side")
+              ;;(print "z's parent is on the right side")
               (define y (node-left (node-parent (node-parent z))))
               (cond
                 [(red-node? y)
-                 (print "CASE 1B: y is red")
+                 ;(print "CASE 1B: y is red")
                  (set-node-color! (node-parent z) 'black)
                  (set-node-color! y 'black)
                  (set-node-color! (node-parent (node-parent z)) 'red)
@@ -333,21 +333,21 @@
                 [else
                  (cond
                    [(equal? z (node-left (node-parent z)))
-                    (print "CASE 2B: z is on the left side of it's parent")
+                    ;(print "CASE 2B: z is on the left side of it's parent")
                     (set! z (node-parent z))
 
-                    (print "---------> Printing Tree before Left Rotate in Case 2B")
-                    (print-tree Tree)
+                    ;(print "---------> Printing Tree before Left Rotate in Case 2B")
+                    ;(print-tree Tree)
 
                     (right-rotate! Tree z)
 
-                    (print "---------> Printing Tree after Case 2B")
-                    (print-tree Tree)
+                    ;(print "---------> Printing Tree after Case 2B")
+                    ;(print-tree Tree)
                     ]
                    [else (void)]
                    )
 
-                 (print "CASE 3B: y is not red")
+                 ;(print "CASE 3B: y is not red")
                  (set-node-color! (node-parent z) 'black)
                  (set-node-color! (node-parent (node-parent z)) 'red)
                  (left-rotate! Tree (node-parent (node-parent z)))
@@ -507,7 +507,7 @@
                  (left-rotate! Tree (node-parent x))
                  (set! w (node-right (node-parent x)))
                  ]
-                [(and (equal? (black-node? (node-left w))) (black-node? (node-right w)))
+                [(and (black-node? (node-left w)) (black-node? (node-right w)))
                  (print "CASE 2A: w (x's sibling) is black and both w's children are black")
                  (set-node-color! w 'red)
                  (set! x (node-parent x))]
@@ -541,7 +541,7 @@
                  (right-rotate! Tree (node-parent x))
                  (set! w (node-left (node-parent x)))
                  ]
-                [(and (equal? (black-node? (node-right w))) (black-node? (node-left w)))
+                [(and (black-node? (node-right w)) (black-node? (node-left w)))
                  (print "CASE 2B: w (x's sibling) is black and both w's children are black")
                  (set-node-color! w 'red)
                  (set! x (node-parent x))]

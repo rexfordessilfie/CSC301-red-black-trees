@@ -101,8 +101,6 @@ After each deletion/insert, we check that the trees are what we expect them to b
    ))
 
 
-; These tests should pass after writing your new code
-
 (define baby nil)
 (define baby-tree (tree baby))
 (rb-insert! baby-tree (node-copy new-node-A))
@@ -182,7 +180,6 @@ After each deletion/insert, we check that the trees are what we expect them to b
 
 
 (define full-tree (tree nil))
-(define some-node (node-copy new-node-C))
 (rb-insert! full-tree (node-copy new-node-A))
 (rb-insert! full-tree (node-copy new-node-B))
 (rb-insert! full-tree (node-copy new-node-C))
@@ -214,17 +211,52 @@ After each deletion/insert, we check that the trees are what we expect them to b
 ;;; (rb-delete! full-tree new-node-K)
 
 
-(print"AFTER:@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-(print-tree full-tree)
+;(print"AFTER:@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+;(print-tree full-tree)
 
+; DELETIONS
+(define single-tree (tree nil))
+(rb-insert! single-tree (node-copy new-node-A))
+(rb-delete! single-tree (tree-root single-tree))
+
+
+
+(define tree-with-many-inserts (tree nil))
+(rb-insert! tree-with-many-inserts (node-copy new-node-A))
+(rb-insert! tree-with-many-inserts (node-copy new-node-B))
+(rb-insert! tree-with-many-inserts (node-copy new-node-C))
+(rb-insert! tree-with-many-inserts (node-copy new-node-D))
+(rb-insert! tree-with-many-inserts (node-copy new-node-E))
+
+(rb-delete! tree-with-many-inserts (tree-root tree-with-many-inserts))
+(rb-delete! tree-with-many-inserts (tree-root tree-with-many-inserts))
+(rb-delete! tree-with-many-inserts (tree-root tree-with-many-inserts))
+(rb-delete! tree-with-many-inserts (tree-root tree-with-many-inserts))
+(rb-delete! tree-with-many-inserts (tree-root tree-with-many-inserts))
+
+
+(print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+(define tree-with-only-delete-root (tree nil))
+(rb-insert! tree-with-only-delete-root (node-copy new-node-A))
+(rb-insert! tree-with-only-delete-root (node-copy new-node-B))
+(rb-insert! tree-with-only-delete-root (node-copy new-node-C))
+(rb-insert! tree-with-only-delete-root (node-copy new-node-D))
+(rb-insert! tree-with-only-delete-root (node-copy new-node-E))
+
+(rb-delete! tree-with-only-delete-root (tree-root tree-with-only-delete-root))
+
+(print-tree tree-with-only-delete-root)
+
+
+
+
+; These tests should pass after writing your new code
 (define tests-new-code
   (test-suite
    "Tests of insert"
   (test-case
     "inserting into empty tree"
     (check-equal? (and (equal?(node-val(tree-root baby1)) 266) (equal? 'black (node-color (tree-root baby1)))) #t) 
-;    "Inserting into an empty tree"
-;    (check-equal? (rb-check-equals? test-tree1-x expected1-x) #t)
    )
    
    (test-case
@@ -233,8 +265,6 @@ After each deletion/insert, we check that the trees are what we expect them to b
     (check-true (red-node? (node-left (tree-root baby2))))
     (check-true(and (equal? (node-val (tree-root baby2)) 17) (black-node? (tree-root baby2))))
     (check-equal? (and (equal?(node-val(node-right (tree-root baby2))) 266) (red-node? (node-right (tree-root baby2)))) #t)
-;    "Inserting into an empty tree"
-;    (check-equal? (rb-check-equals? test-tree1-x expected1-x) #t)
    )
     (test-case
     "case 1A y is red"
@@ -280,7 +310,7 @@ After each deletion/insert, we check that the trees are what we expect them to b
     (check-true (black-node? (node-left (node-left (tree-root baby7)))))
     (check-true (red-node? (node-parent (node-left (node-left (tree-root baby7))))))
 
-    ;;;; What other tests can we do here? Might be easy if we have something to just check binary tree and rb tree properties for us
+    ;;; What other tests can we do here? Might be easy if we have something to just check binary tree and rb tree properties for us
     (check-true (equal? (node-val (node-left (node-left (node-left (tree-root baby7))))) 1))
     (check-true (equal? (node-val (node-parent (node-left (node-left (tree-root baby7))))) 14))
 
@@ -288,12 +318,36 @@ After each deletion/insert, we check that the trees are what we expect them to b
 
 
   ;;; DELETIONS
+  (test-case
+    "Deleting a single node"
+    (check-true (nil? (tree-root single-tree)))
+  )
 
+  ;; Insert and then delete all
+  (test-case
+    "Insert many nodes, then consistently delete all via deletions on root. Tree should be nil and not contain any of the inserted nodes"
+    (check-true (nil? (tree-root tree-with-many-inserts)))
+    (check-false (tree-contains? (tree-root tree-with-many-inserts)  266))
+    (check-false (tree-contains? (tree-root tree-with-many-inserts)  17))
+    (check-false (tree-contains? (tree-root tree-with-many-inserts)  14))
+    (check-false (tree-contains? (tree-root tree-with-many-inserts)  1))
+    (check-false (tree-contains? (tree-root tree-with-many-inserts)  15))
+  )
+
+
+  ;; Insert and then delete all
+  (test-case
+    "Insert many nodes, then delete only root."
+    (check-false (nil? (tree-root tree-with-only-delete-root)))
+     (check-false (tree-contains? (tree-root tree-with-only-delete-root) 17))
+    (check-equal? (node-val (tree-root tree-with-only-delete-root)) 266)
+    (check-true (black-node? (tree-root tree-with-only-delete-root)))
+  )
 
   ))
 
 
-;(run-tests tests-starter-code) (newline)
+(run-tests tests-starter-code) (newline)
 (run-tests tests-new-code) (newline)
 
 
